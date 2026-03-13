@@ -1,0 +1,9 @@
+/buffer/
+/distill_utils/
+/logged_files/
+/wandb/
+/data/Annotation/
+
+__pycache__/
+*.npz
+check
