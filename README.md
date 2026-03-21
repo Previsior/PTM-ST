@@ -20,6 +20,7 @@ TODO list:
 - [x] Upload buffers and models.  
 - [x] Updated Repro Guidance (README).  
 - [ ] Submit paper to arxiv.  
+- [ ] Add ST method.
 
 ## Getting Started
 ### Environment
@@ -83,6 +84,9 @@ You can generate expert trajectories by running the `sh/buffer.sh`, or alternati
 ```bash
 
 ```
+
+### Genetate Convex Trajectories for ST
+
 
 ### Distillation
 You can distill multimodal datasets by running `sh/distill.sh`.
