@@ -17,12 +17,12 @@ class QuickGELU(nn.Module):
     def forward(self, x: torch.Tensor):
         return x * torch.sigmoid(1.702 * x)
 
-# Caching text models, by Yue Xu
 
 @functools.lru_cache(maxsize=128)
 def get_bert_stuff():
-    tokenizer = BertTokenizer.from_pretrained('./distill_utils/checkpoints/bert-base-uncased')
-    BERT_model = BertModel.from_pretrained('./distill_utils/checkpoints/bert-base-uncased')
+    BERT_MODEL_NAME = "bert-base-uncased"
+    tokenizer = BertTokenizer.from_pretrained(BERT_MODEL_NAME, local_files_only=False)
+    BERT_model = BertModel.from_pretrained(BERT_MODEL_NAME, local_files_only=False)
     return BERT_model, tokenizer
 
 @functools.lru_cache(maxsize=128)
@@ -34,17 +34,16 @@ def get_distilbert_stuff():
 
 @functools.lru_cache(maxsize=128)
 def get_gpt1_stuff():
-    model_name = './distill_utils/checkpoints/openai-gpt'
-    model = OpenAIGPTModel.from_pretrained(model_name)
-    tokenizer = OpenAIGPTTokenizer.from_pretrained(model_name)
+    model_name = 'openai-gpt'
+    model = OpenAIGPTModel.from_pretrained(model_name, local_files_only=False)
+    tokenizer = OpenAIGPTTokenizer.from_pretrained(model_name, local_files_only=False)
     return model, tokenizer
 
 @functools.lru_cache(maxsize=128)
 def get_bge_stuff():
-    # model_name = './distill_utils/checkpoints/bge-base-en-v1.5'
     model_name = "BAAI/bge-base-en-v1.5"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModel.from_pretrained(model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name, local_files_only=False)
+    model = AutoModel.from_pretrained(model_name, local_files_only=False)
     return model, tokenizer
 
 
@@ -716,7 +715,6 @@ def load_from_timm(model_name, pretrained):
         #     model = ViTModel(configuration)
 
     elif model_name == 'nfnet':
-        # model = timm.create_model('nfnet_l0', pretrained=pretrained, num_classes=0, global_pool="avg", pretrained_cfg_overlay=dict(file='distill_utils/checkpoints/nfnet_l0_ra2-45c6688d.pth'),)
         model = timm.create_model('nfnet_l0', pretrained=pretrained, num_classes=0, global_pool="avg")
     elif model_name == 'vit':
         model = timm.create_model('vit_tiny_patch16_224', pretrained=True)
@@ -777,7 +775,7 @@ class TextEncoder(nn.Module):
         self.model_name = args.text_encoder
         
         if self.model_name == 'clip':
-            self.model, preprocess = clip.load("ViT-B/32", device='cuda', download_root="distill_utils/checkpoints")
+            self.model, preprocess = clip.load("ViT-B/32", device='cuda')
         elif self.model_name == 'bert':
             pt_model, self.tokenizer = get_bert_stuff()
             if args.text_pretrained:

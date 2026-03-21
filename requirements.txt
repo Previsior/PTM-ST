@@ -1,0 +1,14 @@
+torch==2.0.1
+torchvision==0.15.2
+numpy==1.24.4
+Pillow==10.4.0
+tqdm==4.66.5
+timm==0.9.8
+transformers==4.44.2
+clip @ git+https://github.com/openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1
+kornia==0.6.3
+scikit-learn==1.1.2
+scipy==1.10.1
+opencv-python==4.11.0.86
+wandb==0.17.9
+huggingface_hub==0.36.2

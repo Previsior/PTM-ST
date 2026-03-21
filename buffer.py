@@ -183,7 +183,7 @@ def make_buffer_parser():
 
     parser.add_argument('--difficulty_init', type=bool, default=False)
     parser.add_argument('--cluster_init', type=bool, default=False)
-    parser.add_argument('--out_embedding', type=int, default='2304')
+    parser.add_argument('--out_embedding', type=int, default='2048')
     
     return parser
 
