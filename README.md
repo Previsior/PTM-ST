@@ -8,7 +8,7 @@
 <sup>* equal contribution &nbsp;&nbsp; † corresponding author</sup>
 
 <p align="center">
-    📖 <a href="https://openreview.net/forum?id=Me4AON8160"><b>OpenReview</b></a> &nbsp;&nbsp; | &nbsp;&nbsp; 🤗 <a href="https://huggingface.co/datasets/Previsior22/PTM-ST">Huggingface</a> &nbsp;&nbsp; | &nbsp;&nbsp; 📑 <a href="[你的Arxiv链接]">Arxiv</a> &nbsp;&nbsp;
+    📖 <a href="https://openreview.net/forum?id=Me4AON8160"><b>OpenReview</b></a> &nbsp;&nbsp; | &nbsp;&nbsp; 🤗 <a href="https://huggingface.co/datasets/Previsior22/PTM-ST">Huggingface</a> &nbsp;&nbsp; | &nbsp;&nbsp; 📑 <a href="https://arxiv.org/abs/2603.25388">Arxiv</a> &nbsp;&nbsp;
 </p>
 
 </div>
@@ -19,7 +19,7 @@ TODO list:
 - [x] Upload basic code.  
 - [x] Upload buffers and models.  
 - [x] Updated Repro Guidance (README).  
-- [ ] Submit paper to arxiv.  
+- [x] Submit paper to arxiv.  
 - [ ] Add ST method.
 
 ## Getting Started
@@ -82,11 +82,13 @@ hf download previsor/PTM-ST --repo-type dataset --include "Annotation/*" --local
 You can generate expert trajectories by running the `sh/buffer.sh`, or alternatively, download our [pre-generated trajectories](https://huggingface.co/datasets/Previsior22/PTM-ST) for faster reproduction:
 
 ```bash
-
+hf download previsor/PTM-ST --repo-type dataset --include "flickr/nfnet_bert/InfoNCE/normal/*" --local-dir ./buffer
+hf download previsor/PTM-ST --repo-type dataset --include "coco/nfnet_bert/InfoNCE/normal/*" --local-dir ./buffer
+hf download previsor/PTM-ST --repo-type dataset --include "cc3m/nfnet_bert/InfoNCE/normal/*" --local-dir ./buffer
 ```
 
 ### Genetate Convex Trajectories for ST
-
+Coming soon.
 
 ### Distillation
 You can distill multimodal datasets by running `sh/distill.sh`.
@@ -111,5 +113,10 @@ python distill_ptm-st.py --dataset=flickr \
 If you find this code useful in your research, please consider citing our work:
 
 ```bibtex
-
+@article{guo2026multimodal,
+  title={Multimodal Dataset Distillation via Phased Teacher Models},
+  author={Guo, Shengbin and Zhao, Hang and Yang, Senqiao and Jiang, Chenyang and Cheng, Yuhang and Peng, Xiangru and Shao, Rui and Tian, Zhuotao},
+  journal={arXiv preprint arXiv:2603.25388},
+  year={2026}
+}
 ```
