@@ -1,9 +1,6 @@
-"""Evaliuate the distilled data, could be used for cross-arch exp
-Example: 
-
-    python evaluate_only.py --dataset=flickr --num_eval 1 \
-        --ckpt_path tmp/flickr_500_distilled.pt --loss_type WBCE \
-        --image_encoder=nf_resnet50 --text_encoder=bert --batch_train 64
+"""Evaliuate the distilled data
+Example:
+    
 """
 
 from collections import defaultdict
@@ -257,10 +254,6 @@ if __name__ == '__main__':
     parser.add_argument('--syn_lr_txt', type=float, default=None)
     parser.add_argument('--mom', type=float, default=0.9)
     parser.add_argument('--l2', type=float, default=0.0005)
-
-    parser.add_argument('--difficulty_init', action="store_true", default=False)
-    parser.add_argument('--cluster_init', action="store_true", default=False)
-    parser.add_argument('--proj_type', type=str, default="liner")
     
     args = parser.parse_args()
 

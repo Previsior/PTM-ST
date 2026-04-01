@@ -24,7 +24,6 @@ from src.similarity_mining import LowRankSimilarityGenerator, FullSimilarityGene
 from src.vl_distill_utils import shuffle_files, nearest_neighbor, get_images_texts, load_or_process_file, syn_dataset
 
 from model_ema import ModelEmaV2
-# from MCT.convexify import interp_params
 
 
 def make_timestamp(prefix: str="", suffix: str="") -> str:
@@ -56,7 +55,6 @@ def main(args, syn_data_list):
     if args.zca and args.texture:
         raise AssertionError("Cannot use zca and texture together")
     args.dsa = True if args.dsa == 'True' else False
-    args.device = 'cuda' if torch.cuda.is_available() else 'cpu'
     if args.dsa:
         args.dc_aug_param = None
     args.dsa_param = ParamDiffAug()
@@ -607,7 +605,7 @@ if __name__ == '__main__':
     parser.add_argument('--debug', action="store_true", default=False)
 
     args = parser.parse_args()
-
+    args.device = 'cuda' if torch.cuda.is_available() else 'cpu'
     args.image_root = {
         'flickr': "./distill_utils/data/Flickr30k",
         'coco': "./distill_utils/data/COCO",

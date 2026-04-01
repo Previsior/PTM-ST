@@ -20,10 +20,14 @@ TODO list:
 - [x] Upload buffers and models.  
 - [x] Updated Repro Guidance (README).  
 - [x] Submit paper to arxiv.  
-- [ ] Add ST method.
+- [x] Add ST method.
+
+## TL; DR
+We introduce PTM-ST, a novel phased distillation framework that achieves superior performance in Multimodal Dataset Distillation by leveraging stage-aware teacher modeling and shortcut-based trajectories to efficiently compress massive image-text data.
 
 ## Getting Started
 ### Environment
+We tested our code on a single RTX3090 GPU, CUDA Driver Version: 12.1.
 Run the following commands to build environment:
 
 ```bash
@@ -88,15 +92,18 @@ hf download previsor/PTM-ST --repo-type dataset --include "cc3m/nfnet_bert/InfoN
 ```
 
 ### Genetate Convex Trajectories for ST
-Coming soon.
+After preparing the normal trajectory, use `convexify.py` to generate the interpolated trajectory.  
+Example usage:
+
+```bash
+python convexify.py --start 0 --end 10 --normal_dir ./buffer/flickr/nfnet_bert/InfoNCE/normal
+```
 
 ### Distillation
 You can distill multimodal datasets by running `sh/distill.sh`.
 The file records the specific parameter settings of different datasets and distilled data pairs. For example, the Flickr 500 pair:
 
 ```bash
-FILE_NAME=$(basename -- "$0")
-EXP_NAME="${FILE_NAME%.*}"
 export CUDA_VISIBLE_DEVICES=$1
 python distill_ptm-st.py --dataset=flickr \
     --buffer_path './buffer/flickr/nfnet_bert/InfoNCE/convexified_0_6' './buffer/flickr/nfnet_bert/InfoNCE/convexified_0_8' \

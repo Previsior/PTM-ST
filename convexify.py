@@ -1,33 +1,12 @@
+"""
+example usage:
+python convexify.py --start 0 --end 10 --normal_dir ./buffer/flickr/nfnet_bert/InfoNCE/normal
+"""
+
 import os
 import glob
 import torch
-import numpy as np
-
-
-def interp_params(traj_dict, c):
-    """
-    traj_dict : {'theta0', 'thetaK', 'beta'} ; beta shape (L, K+1)
-    c         : float  in [0,K]
-    return    : list[layer Tensor]  (theta(c))
-    """
-    beta_mat = traj_dict['beta']   # (L, K+1)
-
-    t0, t1 = int(np.floor(c)), int(np.ceil(c))
-    eta = c - t0
-    beta_hat = (1 - eta) * beta_mat[:, t0] + eta * beta_mat[:, t1]   # (L,)
-
-    theta0, thetaK = traj_dict['theta0'], traj_dict['thetaK']
-    out = [(1 - b) * p0 + b * pK for b, p0, pK in zip(beta_hat, theta0, thetaK)]
-    return out
-
-# ---------------------------------------------------------------------
-NORMAL_DIR = "./buffer/cc3m/nfnet_bert/InfoNCE/normal"
-START = 0
-END = 10
-CONV_DIR   = f"./buffer/cc3m/nfnet_bert/InfoNCE/convexified_{START}_{END}"
-# ---------------------------------------------------------------------
-
-os.makedirs(CONV_DIR, exist_ok=True)
+import argparse
 
 
 def convexify(traj):
@@ -78,24 +57,6 @@ def convexify(traj):
 
     return tau_conv
 
-def convexify_beta(traj):
-    traj = traj[START:END]
-    K, n_layers = len(traj)-1, len(traj[0])
-    seg_norm = torch.zeros(n_layers, K)          # (L,K)
-    for p in range(K):
-        for l in range(n_layers):
-            seg_norm[l, p] = (traj[p+1][l] - traj[p][l]).norm().float()
-
-    total = seg_norm.sum(1, keepdim=True)        # (L,1)
-    cum = torch.cat([torch.zeros(n_layers, 1), seg_norm.cumsum(1)], dim=1)  # (L,K+1)
-    beta = torch.where(total > 0, cum / total, torch.zeros_like(cum))        # (L,K+1)
-
-    return {
-        'theta0': [p.cpu() for p in traj[0]],
-        'thetaK': [p.cpu() for p in traj[-1]],
-        'beta'  : beta.cpu()                    # layer-wise
-    }
-
 
 def process_dir(prefix):
     """
@@ -111,17 +72,27 @@ def process_dir(prefix):
         torch.save(new_trajectories, dst_path)
         print(f"[OK] Saved convexified trajectory -> {dst_path}")
 
-def process_dir_beta(prefix):
-    for src in glob.glob(os.path.join(NORMAL_DIR, f"{prefix}*.pt")):
-        new_buf = [convexify_beta(traj) for traj in torch.load(src, map_location='cpu')]
-        torch.save(new_buf, os.path.join(CONV_DIR, os.path.basename(src)))
-        print("OK convexified ->", os.path.basename(src))
 
 
 if __name__ == "__main__":
-    # image-side trajectories
+    parser = argparse.ArgumentParser(description="Convexify parameter trajectories.")
+    parser.add_argument("--normal_dir", type=str, default="./buffer/flickr/nfnet_bert/InfoNCE/normal", help="Source directory")
+    parser.add_argument("--start", type=int, default=0, help="Start index for slicing")
+    parser.add_argument("--end", type=int, default=8, help="End index for slicing")
+    
+    args = parser.parse_args()
+
+    NORMAL_DIR = args.normal_dir
+    START = args.start
+    END = args.end
+    
+    parent_dir = os.path.dirname(NORMAL_DIR.rstrip('/'))
+    CONV_DIR = os.path.join(parent_dir, f"convexified_{START}_{END}")
+    os.makedirs(CONV_DIR, exist_ok=True)
+    
+    print(f"Processing from: {NORMAL_DIR}")
+    print(f"Slice range: {START} to {END}")
+    print(f"Saving to: {CONV_DIR}")
+
     process_dir("img_replay_buffer_")
-    # process_dir_beta("img_replay_buffer_")
-    # text-side trajectories
     process_dir("txt_replay_buffer_")
-    # process_dir_beta("txt_replay_buffer_")

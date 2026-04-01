@@ -11,7 +11,7 @@ import tqdm
 from torch.utils.data import Dataset
 from torchvision import datasets, transforms
 from scipy.ndimage.interpolation import rotate as scipyrotate
-from src.networks import MLP, ConvNet, LeNet, AlexNet, VGG11BN, VGG11, ResNet18, ResNet18BN_AP, ResNet18_AP, ModifiedResNet, resnet18_gn
+from src.networks import MLP, ConvNet, LeNet, AlexNet, VGG11BN, VGG11, ResNet18BN_AP, ResNet18_AP, ModifiedResNet
 import re
 import json
 import torch.distributed as dist
